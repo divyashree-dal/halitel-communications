@@ -1,10 +1,11 @@
 import dash
 import os
-import dash_bootstrap_components as dbc
+import dash_bootstrap_components  as dbc
 from dash import dcc
 from dash import html
 from dash import no_update
 import sys
+
 file = os.path.join(os.getcwd(), os.listdir(os.getcwd())[0])
 dir_name = os.path.dirname(os.path.dirname(file))
 sys.path.append(dir_name)
@@ -44,10 +45,11 @@ app = dash.Dash(
                 "content": "width=device-width, initial-scale=1"}]
 )
 
+server = app.server
 # To read the dataset
 churn_df = read_dataset()
 churn_df = churn_df.copy()
-models_dict, classification_models = getAllModels()
+
 tab_style = {
     'backgroundColor': '#12191C',
     'letterSpacing': '1px',
@@ -327,6 +329,7 @@ def update_senior_tenure_fig(contractkey):
 # Callback : To display the plotly chart of the classification models
 @app.callback(Output('plotly-main-graph', "figure"), [Input('model-id', 'key')])
 def update_models_fig(modelkey):
+    models_dict, classification_models = getAllModels()
     return plotly_models_table(classification_models)
 
 
@@ -347,7 +350,7 @@ def update_models_fig(corrkey):
         Input('btn-n-clicks-6', 'n_clicks')])
 def displayClick(btn1, btn2, btn3, btn4, btn5, btn6):
     clicked = ''
-
+    models_dict, classification_models = getAllModels()
     if btn1 is not None and btn1 > button_counts['btn1']:
         clicked = 'btn1'
         button_counts['btn1'] = btn1
@@ -410,6 +413,8 @@ def displayClick(btn1, btn2, btn3, btn4, btn5, btn6):
 @app.callback(Output('auc-curve', 'figure'),
               [Input('auc-dropdown', 'value')])
 def update_x_axis(classifier_model):
+    models_dict, classification_models = getAllModels()
+
     if classifier_model == 'Decision_Tree':
         decision_tree_model = models_dict['decision_tree_dict']
         fpr = decision_tree_model['fpr']
@@ -516,6 +521,8 @@ def update_prediction(n_clicks, gender_select, senior_citizen_select, phone_serv
                       streaming_tv_select, streaming_movies_select, contract_select, partner_select, dependents_select,
                       payment_method_select, paperless_method_select, monthly_charges, total_charges, tenure
                       ):
+    models_dict, classification_models = getAllModels()
+
     churn_columns_dict = {'gender': gender_select, 'SeniorCitizen': senior_citizen_select,
 
                           'PhoneService': phone_service_select, 'MultipleLines': multiple_line_select,
