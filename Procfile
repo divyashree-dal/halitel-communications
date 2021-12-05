@@ -1,1 +1,1 @@
-web: sh -c 'cd ./interactivity/ && python dashIn.py'
+web: sh -c 'cd ./interactivity/ && gunicorn dashIn:server'
